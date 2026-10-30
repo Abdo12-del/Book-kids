@@ -20,8 +20,10 @@ function App(){
   const camera=cameraRef.current;
   if(!camera || !window.matchMedia('(max-width: 650px)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const movement=Math.sin(Math.PI*Math.max(0,Math.min(1,progress)));
-  camera.style.setProperty('--camera-x', `${(direction==='next'?1:-1)*movement*8}px`);
-  camera.style.setProperty('--camera-scale', `${1-movement*0.018}`);
+  // The camera moves within a clipped viewport; it must never widen the document.
+  const distance=Math.min(camera.clientWidth*0.06,22);
+  camera.style.setProperty('--camera-x', `${(direction==='next'?1:-1)*movement*distance}px`);
+  camera.style.setProperty('--camera-scale', `${1-movement*0.035}`);
  };
  const resetCamera = () => {
   cameraRef.current?.style.setProperty('--camera-x','0px');
