@@ -48,3 +48,8 @@
  .table-open-hint{font-size:12px;min-height:44px}
 }
 .paper-text{overflow-wrap:anywhere;white-space:pre-line}
+/* Keep the real page curl. On phones a subtle camera movement follows the fold. */
+.reader-camera{width:min(760px,100%);min-width:0;display:flex;align-items:center;justify-content:center;transform:translate3d(var(--camera-x,0px),0,0) scale(var(--camera-scale,1));transform-origin:center;will-change:transform}
+.reader-camera .real-flip-book{width:100%}
+@media(max-width:650px){.reader-camera{width:min(100%,380px);max-width:100%;overflow:visible}.book-stage{overflow:visible}.reader-camera .real-flip-book{max-width:100%}}
+@media(prefers-reduced-motion:reduce){.reader-camera{transform:none!important;will-change:auto}}
