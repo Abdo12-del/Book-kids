@@ -20,3 +20,31 @@
 .user-book-cover{padding:0;overflow:hidden;background:#17589b}
 .user-book-cover img{display:block;width:100%;height:100%;object-fit:fill;border-radius:4px 10px 10px 4px}
 @media(max-width:650px){.immersive-center .desk-book{width:min(68vw,280px);height:auto;aspect-ratio:724 / 1024}}
+/* Front and back artwork from the supplied jacket, shown as full cover leaves. */
+.reader-cover{width:100%;height:100%;background:#1461a6;overflow:hidden}
+.reader-cover img{display:block;width:100%;height:100%;object-fit:fill}
+.reader-cover img{object-fit:contain}
+/* Phone: a single readable leaf with generous touch targets, not a shrunken spread. */
+@media(max-width:650px){
+ .reader{padding:74px 0 28px;background-attachment:scroll}
+ .reader-table-controls{position:absolute;top:12px;gap:8px}
+ .reader-close-book,.reader-tools button{min-height:44px}
+ .book-stage{width:100%;min-height:0;gap:0;padding:0 12px}
+ .book-stage .side-arrow{display:none}
+ .real-flip-book{width:100%;max-width:min(100%,380px);touch-action:pan-y}
+ .real-flip-book .paper-inner{padding:24px 22px}
+ .real-flip-book h2{font-size:20px;line-height:1.55}
+ .paper-label,.paper-author{font-size:11px}
+ .paper-text{font-size:15px;line-height:1.9;max-height:calc(100% - 150px);overflow:auto;overscroll-behavior:contain;margin-top:15px;color:#344d5b}
+ .reader-bottom{gap:10px;margin:18px 12px 0}
+ .reader-bottom button{min-height:46px;min-width:92px;justify-content:center;font-size:13px}
+ .reader-bottom span{font-size:12px;white-space:nowrap}
+ .reader-tip{font-size:11px;padding:0 16px}
+ .book-stage.zoom .real-flip-book{transform:none}
+ .book-stage.zoom .paper-text{font-size:18px;line-height:2}
+ .toc{width:min(330px,calc(100vw - 24px));max-height:65dvh}
+ .toc>button:not(:first-child){padding:13px;font-size:13px;min-height:44px}
+ .immersive-desk{background-attachment:scroll}
+ .table-open-hint{font-size:12px;min-height:44px}
+}
+.paper-text{overflow-wrap:anywhere;white-space:pre-line}
