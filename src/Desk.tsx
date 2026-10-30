@@ -8,22 +8,25 @@ export function Desk({stories, open, openStory, write}:{stories:DeskStory[];open
  type CarriedBook={from:'desk'|'shelf';left:number;top:number;width:number;height:number;settling:boolean};
  const [drag,setDrag]=useState<CarriedBook|null>(null);
  const shelfRef=useRef<HTMLDivElement>(null); const deskRef=useRef<HTMLElement>(null);
- const gesture=useRef<{from:'desk'|'shelf';x:number;y:number;left:number;top:number;width:number;height:number;moved:boolean}|null>(null);
+ const gesture=useRef<{pointerId:number;from:'desk'|'shelf';x:number;y:number;left:number;top:number;width:number;height:number;moved:boolean}|null>(null);
  const settleTimer=useRef<number|null>(null); const suppressClick=useRef(false);
  useEffect(()=>()=>{if(settleTimer.current!==null)window.clearTimeout(settleTimer.current)},[]);
  const startDrag=(e:PointerEvent<HTMLButtonElement>,from:'desk'|'shelf')=>{
-  if(e.button!==0||drag?.settling)return;
+  if(e.button!==0||drag?.settling||gesture.current)return;
+  suppressClick.current=false;
   const rect=e.currentTarget.querySelector('img')?.getBoundingClientRect() ?? e.currentTarget.getBoundingClientRect();
-  gesture.current={from,x:e.clientX,y:e.clientY,left:rect.left,top:rect.top,width:rect.width,height:rect.height,moved:false};
+  gesture.current={pointerId:e.pointerId,from,x:e.clientX,y:e.clientY,left:rect.left,top:rect.top,width:rect.width,height:rect.height,moved:false};
   e.currentTarget.setPointerCapture(e.pointerId);
  };
  const moveDrag=(e:PointerEvent<HTMLButtonElement>)=>{
-  const g=gesture.current;if(!g)return;
-  if(!g.moved&&Math.hypot(e.clientX-g.x,e.clientY-g.y)>10){g.moved=true;if(g.from==='desk')setShelfOpen(true)}
-  if(g.moved)setDrag({from:g.from,left:g.left+e.clientX-g.x,top:g.top+e.clientY-g.y,width:g.width,height:g.height,settling:false});
+  const g=gesture.current;if(!g||g.pointerId!==e.pointerId)return;
+  if(!g.moved&&Math.hypot(e.clientX-g.x,e.clientY-g.y)>5){g.moved=true;if(g.from==='desk')setShelfOpen(true)}
+  // Keep the exact point where the book was held under the finger as it shrinks.
+  if(g.moved){const scale=.85;setDrag({from:g.from,left:e.clientX-(g.x-g.left)*scale,top:e.clientY-(g.y-g.top)*scale,width:g.width*scale,height:g.height*scale,settling:false})}
+ 
  };
  const endDrag=(e:PointerEvent<HTMLButtonElement>,cancelled=false)=>{
-  const g=gesture.current;gesture.current=null;if(!g?.moved)return;
+  const g=gesture.current;if(!g||g.pointerId!==e.pointerId)return;gesture.current=null;if(!g.moved)return;
   suppressClick.current=true;window.setTimeout(()=>{suppressClick.current=false},0);
   const area=g.from==='desk'?shelfRef.current:deskRef.current;
   const rect=area?.getBoundingClientRect();
