@@ -136,3 +136,30 @@
 /* Every part of the cover remains a drag handle, including on touch screens. */
 .desk-book,.shelf-book{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none}
 .desk-book img,.shelf-book img,.book-ribbon{pointer-events:none;-webkit-user-drag:none}
+
+/* Letter sequence, independently built for this library: one story sheet folds,
+   enters a layered pocket, the flap closes and the sealed envelope leaves. */
+.letter-stage{height:330px;position:relative;display:flex;align-items:flex-end;justify-content:center;padding-bottom:28px;perspective:900px;overflow:hidden}
+.letter-shadow{position:absolute;bottom:19px;width:230px;height:20px;border-radius:50%;background:radial-gradient(ellipse,#62482b55,transparent 70%);animation:letter-shadow-move 6.2s ease both}
+.letter-envelope{position:relative;width:min(260px,72vw);height:165px;transform-style:preserve-3d;filter:drop-shadow(4px 9px 8px #67492d45);animation:envelope-depart 6.2s ease-in-out both}
+.letter-envelope-back{position:absolute;inset:0;background:linear-gradient(135deg,#bd9165,#d2aa7e);border:1px solid #b0845b;border-radius:4px}
+.letter-flap-back{position:absolute;inset:0;background:#b4885e;clip-path:polygon(0 0,100% 0,50% 55%);transform:rotateX(180deg);transform-origin:top;z-index:0}
+.letter-sheet{position:absolute;z-index:1;left:11%;top:-138px;width:78%;height:240px;transform-style:preserve-3d;animation:letter-into-pocket 6.2s ease-in-out both}
+.letter-sheet-top,.letter-sheet-middle,.letter-sheet-bottom{position:absolute;left:0;width:100%;height:33.333%;background:#fffdf5;border:1px solid #e5dac5;box-shadow:0 3px 4px #67543b24;color:#6d5941;backface-visibility:visible}
+.letter-sheet-top{top:0;transform-origin:bottom;animation:fold-letter-top 6.2s ease-in-out both;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px;z-index:2}.letter-sheet-top span{font-size:9px;color:#bd9f77}.letter-sheet-top strong{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;max-width:100%;font:700 16px 'Noto Naskh Arabic',serif;line-height:1.35}
+.letter-sheet-middle{top:33.333%;overflow:hidden;padding:7px 13px;text-align:right;background:repeating-linear-gradient(#fffdf5 0,#fffdf5 17px,#e8dfcf 18px)}.letter-sheet-middle p{font:12px/18px 'Noto Naskh Arabic',serif;white-space:pre-wrap;overflow-wrap:anywhere;margin:0;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.letter-sheet-bottom{top:66.666%;transform-origin:top;animation:fold-letter-bottom 6.2s ease-in-out both;display:flex;align-items:end;justify-content:center;padding:12px;color:#ad997f;font:11px 'Noto Naskh Arabic',serif;background:repeating-linear-gradient(#fffdf5 0,#fffdf5 17px,#e8dfcf 18px)}
+.letter-pocket{position:absolute;inset:0;z-index:2;border-radius:3px;background:linear-gradient(145deg,#e9cba5,#d8b080);clip-path:polygon(0 0,50% 57%,100% 0,100% 100%,0 100%);box-shadow:inset 0 0 0 1px #c59a70}.letter-pocket:before{content:'';position:absolute;inset:0;background:#edd3b1;clip-path:polygon(0 100%,50% 47%,100% 100%)}.letter-pocket-address{position:absolute;z-index:1;right:20px;bottom:17px;text-align:right;color:#805e41;font:700 14px/1.5 'Noto Naskh Arabic',serif}.letter-pocket-address span{font-size:10px;font-weight:400}.letter-postage{position:absolute;z-index:1;left:18px;bottom:18px;width:37px;height:42px;border:2px dotted #ad7f58;color:#a17351;display:grid;place-content:center;font-size:12px;line-height:1}.letter-postage small{font-size:7px;line-height:1.2}
+.letter-seal-flap{position:absolute;inset:0;z-index:3;background:linear-gradient(#d6b087,#c79a6d);clip-path:polygon(0 0,100% 0,50% 57%);transform-origin:top;transform:rotateX(180deg);animation:close-real-flap 6.2s ease-in-out both}.letter-wax{position:absolute;z-index:4;top:76px;left:calc(50% - 14px);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#a96f58;border:2px solid #c18a6b;color:#f7e4c4;opacity:0;animation:stamp-real-letter 6.2s ease both}
+@keyframes fold-letter-top{0%,12%{transform:rotateX(0)}25%,100%{transform:rotateX(-165deg)}}
+@keyframes fold-letter-bottom{0%,26%{transform:rotateX(0)}38%,100%{transform:rotateX(165deg)}}
+@keyframes letter-into-pocket{0%,38%{transform:translateY(0)}60%,100%{transform:translateY(132px)}}
+@keyframes close-real-flap{0%,59%{transform:rotateX(180deg);z-index:0}70%,100%{transform:rotateX(0);z-index:3}}
+@keyframes stamp-real-letter{0%,70%{opacity:0;transform:scale(.5)}76%,100%{opacity:1;transform:scale(1)}}
+@keyframes envelope-depart{0%,80%{transform:translate(0,0) rotate(0);opacity:1}87%{transform:translate(0,-8px) rotate(-3deg);opacity:1}100%{transform:translate(-125px,-105px) rotate(-9deg) scale(.7);opacity:0}}
+@keyframes letter-shadow-move{0%,80%{opacity:1}100%{opacity:0;transform:scale(.6)}}
+@media(max-width:650px){.letter-stage{height:315px}.letter-envelope{width:min(240px,74vw);height:153px}.letter-sheet{top:-138px}.letter-wax{top:69px}.mail-scene{min-height:540px}}
+@media(prefers-reduced-motion:reduce){.letter-stage{height:85px}.letter-envelope,.letter-shadow{animation:none;opacity:0}.letter-sheet,.letter-sheet-top,.letter-sheet-bottom,.letter-seal-flap,.letter-wax{animation:none}}
+/* Explicit test of 3D paper; the CSS letter remains the sending fallback. */
+.paper-preview-toggle{margin:12px auto}.paper-test{border-top:1px solid #e9dbc2;margin-top:12px;padding-top:10px}.paper-test>p,.paper-preview-message{font:12px/1.8 Cairo,sans-serif;color:#887960}.paper-test-canvas{height:320px;max-width:400px;margin:auto;background:#f6efdf;border:1px solid #e8ddc8}.editions-shelf.drop-ready .shelf-placeholder,.immersive-center.drop-ready .empty-desk{outline:3px solid #fff1b3;outline-offset:4px;background:#f9e5b945}
+@media(max-width:650px){.paper-test-canvas{height:260px}}
