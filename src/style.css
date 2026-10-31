@@ -233,3 +233,7 @@
 .desk-book-cover.user-book-cover:after{content:'';position:absolute;inset:0 0 0 auto;width:12px;pointer-events:none;background:linear-gradient(to left,#173c6270,#173c6200)}
 .dragged-book img{border-radius:8px 3px 3px 8px;box-shadow:-3px 3px 0 #ece0c8,-5px 5px 0 #d3c2a3,-8px 8px 0 #a88a68,-11px 13px 14px #38201266}
 @media(prefers-reduced-motion:reduce){.immersive-center .desk-book{transition:none}}
+
+/* Reserve a clear strip below the shelf control on wider screens. The desk may
+   grow vertically on short windows instead of hiding the cover under the tab. */
+@media(min-width:651px){.immersive-desk{padding-top:110px}}
