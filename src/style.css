@@ -237,3 +237,9 @@
 /* Reserve a clear strip below the shelf control on wider screens. The desk may
    grow vertically on short windows instead of hiding the cover under the tab. */
 @media(min-width:651px){.immersive-desk{padding-top:110px}}
+
+/* Keep the flipbook's off-screen turning layers inside the reader. Otherwise
+   they can extend the document past the table and expose the body background. */
+.reader{display:flow-root;overflow:clip;min-height:100dvh}
+body:has(.reader){background:#d9b086 url('/library-desk.png') center/cover fixed}
+@media(max-width:650px){body:has(.reader){background-attachment:scroll}}
