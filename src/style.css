@@ -346,3 +346,8 @@ body:has(.reader){background:#d9b086 url('/library-desk.png') center/cover fixed
 @keyframes fold-top-third{0%,12%{transform:rotateX(0)}29%,100%{transform:rotateX(-170deg)}}@keyframes fold-bottom-third{0%,27%{transform:rotateX(0)}43%,100%{transform:rotateX(170deg)}}@keyframes bundle-to-envelope{0%,43%{transform:translateY(0)}70%,100%{transform:translateY(155px)}}@keyframes fold-envelope-close{0%,68%{transform:rotateX(180deg);z-index:0}82%,100%{transform:rotateX(0);z-index:3}}@keyframes fold-wax-seal{0%,81%{opacity:0;transform:scale(.5)}90%,100%{opacity:1;transform:scale(1)}}
 @media(max-width:650px){.creator-shelf{width:min(96vw,660px)}.creator-shelf-inner{min-height:190px;padding:52px 12px 12px;gap:10px}.creator-shelf .shelf-heading{min-width:75px}.creator-shelf-story{flex-basis:78px;height:110px}.creator-shelf-story strong{font-size:12px}.creator-shelf-close{top:44px;left:3px}.folding-stage{height:345px}.fold-envelope-back,.fold-envelope-pocket,.fold-envelope-flap{width:230px;height:150px;left:calc(50% - 115px)}.fold-bundle{left:calc(50% - 90px);width:180px}.fold-envelope-wax{bottom:80px}}
 @media(prefers-reduced-motion:reduce){.creator-shelf-story{transition:none}.fold-bundle,.fold-sheet-top,.fold-sheet-bottom,.fold-envelope-flap,.fold-envelope-wax{animation:none}}
+
+/* The shelf starts below every navigation row, including wrapped mobile buttons. */
+.creator-shelf-inner{padding-top:calc(var(--creator-nav-bottom, 70px) + 12px);padding-left:38px}
+.creator-shelf-close{top:calc(var(--creator-nav-bottom, 70px) + 10px);left:5px}
+@media(max-width:650px){.creator-shelf-inner{padding-top:calc(var(--creator-nav-bottom, 110px) + 10px);padding-left:32px}.creator-shelf-close{top:calc(var(--creator-nav-bottom, 110px) + 7px);left:3px}}

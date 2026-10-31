@@ -18,6 +18,14 @@ export function CreatorDesk({stories,update,exit,read}:{stories:DemoStory[];upda
  const [error,setError]=useState(''); const [saveState,setSaveState]=useState('');
  const [seen,setSeen]=useState<string[]>(()=>{try{return JSON.parse(localStorage.getItem('little-demo-read-letters')||'[]')}catch{return []}});
  const storiesRef=useRef(stories); storiesRef.current=stories;
+ const deskRef=useRef<HTMLElement>(null); const navRef=useRef<HTMLDivElement>(null);
+ useEffect(()=>{
+  const nav=navRef.current;const desk=deskRef.current;if(!nav||!desk)return;
+  const measure=()=>desk.style.setProperty('--creator-nav-bottom',`${Math.ceil(nav.getBoundingClientRect().bottom-desk.getBoundingClientRect().top)}px`);
+  measure();const observer=typeof ResizeObserver!=='undefined'?new ResizeObserver(measure):null;
+  observer?.observe(nav);window.addEventListener('resize',measure);
+  return()=>{observer?.disconnect();window.removeEventListener('resize',measure)};
+ },[]);
  const [drawerClosing,setDrawerClosing]=useState(false); const drawerTimer=useRef<number|null>(null);
  const timer=useRef<number|null>(null); const paperTimer=useRef<number|null>(null); const [paperLeaving,setPaperLeaving]=useState(false);
  useEffect(()=>()=>{if(timer.current!==null)clearTimeout(timer.current);if(paperTimer.current!==null)clearTimeout(paperTimer.current);if(drawerTimer.current!==null)clearTimeout(drawerTimer.current)},[]);
@@ -39,8 +47,8 @@ export function CreatorDesk({stories,update,exit,read}:{stories:DemoStory[];upda
  const backDesk=()=>{if(error&&!window.confirm('لم ينجح حفظ آخر تغيير. هل تريد المغادرة رغم ذلك؟'))return;if(paperTimer.current!==null){clearTimeout(paperTimer.current);paperTimer.current=null}if(timer.current!==null){clearTimeout(timer.current);timer.current=null}setPaperLeaving(false);setEditing(null);setSelected(null);setError('');setPanel('none');setStage('desk')};
  const openLetter=(entry:{story:DemoStory;letter:Letter})=>{setLetter(entry);const next=[...new Set([...seen,entry.letter.id])];setSeen(next);try{localStorage.setItem('little-demo-read-letters',JSON.stringify(next))}catch{/* Read state is optional. */}};
  const currentSheets=editing?sheetsFor(editing):[];
- return <main className="creator-desk" dir="rtl">
- <div className="creator-top"><button className="creator-tab" onClick={()=>{if(stage!=='desk')return;setPanel(panel==='title'?'none':'title')}} disabled={stage!=='desk'||drawerClosing} aria-expanded={panel==='title'}><PenLine size={18}/> اكتب حكاية <ChevronDown size={17}/></button><button className="creator-tab" onClick={()=>{if(stage!=='desk')return;panel==='drawer'?closeDrawer():setPanel('drawer')}} disabled={stage!=='desk'||drawerClosing} aria-expanded={panel==='drawer'&&!drawerClosing} aria-controls="creator-story-shelf"><FileText size={18}/> رف حكاياتي <ChevronDown size={17}/></button><button className="creator-tab creator-mail-tab" onClick={()=>{if(stage!=='desk')return;panel==='letters'?closeDrawer():setPanel('letters')}} disabled={stage!=='desk'||drawerClosing} aria-expanded={panel==='letters'}><Mail size={18}/> بريدي {unread>0&&<b>{unread}</b>}</button><button className="creator-back" onClick={()=>{if(stage!=='desk'){backDesk();return}exit()}}><ArrowRight size={17}/> {stage==='desk'?'العودة للمكتبة':'العودة للطاولة'}</button></div>
+ return <main ref={deskRef} className="creator-desk" dir="rtl">
+ <div ref={navRef} className="creator-top"><button className="creator-tab" onClick={()=>{if(stage!=='desk')return;setPanel(panel==='title'?'none':'title')}} disabled={stage!=='desk'||drawerClosing} aria-expanded={panel==='title'}><PenLine size={18}/> اكتب حكاية <ChevronDown size={17}/></button><button className="creator-tab" onClick={()=>{if(stage!=='desk')return;panel==='drawer'?closeDrawer():setPanel('drawer')}} disabled={stage!=='desk'||drawerClosing} aria-expanded={panel==='drawer'&&!drawerClosing} aria-controls="creator-story-shelf"><FileText size={18}/> رف حكاياتي <ChevronDown size={17}/></button><button className="creator-tab creator-mail-tab" onClick={()=>{if(stage!=='desk')return;panel==='letters'?closeDrawer():setPanel('letters')}} disabled={stage!=='desk'||drawerClosing} aria-expanded={panel==='letters'}><Mail size={18}/> بريدي {unread>0&&<b>{unread}</b>}</button><button className="creator-back" onClick={()=>{if(stage!=='desk'){backDesk();return}exit()}}><ArrowRight size={17}/> {stage==='desk'?'العودة للمكتبة':'العودة للطاولة'}</button></div>
  <div className="creator-demo">تجربة فقط: الحفظ والرسائل والمراجعة على هذا الجهاز، ولا تصل إلى فريق حقيقي.</div>
  {error&&<div className="creator-error" role="alert">{error}</div>}
  {stage==='desk'&&panel==='none'&&<div className="creator-desk-welcome"><span>✦</span><h1>طاولة حكاياتك</h1><p>اختر «اكتب حكاية» لتبدأ، أو افتح رف حكاياتك لتجد أوراقك.</p>{unread>0&&<button onClick={()=>setPanel('letters')}><Mail size={20}/> لديك {unread} {unread===1?'رسالة جديدة':'رسائل جديدة'}</button>}</div>}
