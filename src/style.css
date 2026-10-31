@@ -223,3 +223,13 @@
 /* Keep the desk opaque while switching to the reader: fading the whole reader
    exposed the light page background and looked like a flash. */
 .reader{animation:none}
+
+/* Arabic book: the binding stays on the right both on the desk and in RTL
+   flipbook. The pages protrude to the left; never mirror the cover artwork. */
+.immersive-center .desk-book{transform-origin:right center;transform:rotate(2deg)}
+.immersive-center .desk-book:hover{transform:rotate(1deg) translateY(-6px)}
+.desk-book-cover.user-book-cover{position:relative;border-radius:10px 3px 3px 10px;box-shadow:-4px 5px 0 #e7dbba,-7px 8px 0 #a78966}
+.desk-book-cover.user-book-cover img{border-radius:10px 3px 3px 10px}
+.desk-book-cover.user-book-cover:after{content:'';position:absolute;inset:0 0 0 auto;width:12px;pointer-events:none;background:linear-gradient(to left,#173c6270,#173c6200)}
+.dragged-book img{border-radius:8px 3px 3px 8px;box-shadow:-3px 3px 0 #ece0c8,-5px 5px 0 #d3c2a3,-8px 8px 0 #a88a68,-11px 13px 14px #38201266}
+@media(prefers-reduced-motion:reduce){.immersive-center .desk-book{transition:none}}
