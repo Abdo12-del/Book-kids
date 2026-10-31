@@ -16,6 +16,7 @@ function DeskPaper({className, onOpen, children}:{className:string;onOpen:()=>vo
   onClick={()=>{if(skipClick.current){skipClick.current=false;return}onOpen()}}>{children}</button>
 }
 
+const playBookSound=(name:'lift'|'land')=>window.dispatchEvent(new CustomEvent('library-sound',{detail:name}));
 type DeskStory = {title:string;author:string;category:string;emoji:string};
 export function Desk({stories, open, openStory, write}:{stories:DeskStory[];open:(page?:number)=>void;openStory:(index:number)=>void;write:()=>void}){
  const [catalog,setCatalog]=useState(false); const [query,setQuery]=useState(''); const [opening,setOpening]=useState(false);
@@ -36,7 +37,7 @@ export function Desk({stories, open, openStory, write}:{stories:DeskStory[];open
  };
  const moveDrag=(e:PointerEvent<HTMLButtonElement>)=>{
   const g=gesture.current;if(!g||g.pointerId!==e.pointerId)return;
-  if(!g.moved&&Math.hypot(e.clientX-g.x,e.clientY-g.y)>5){g.moved=true;if(g.from==='desk')setShelfOpen(true)}
+  if(!g.moved&&Math.hypot(e.clientX-g.x,e.clientY-g.y)>5){g.moved=true;if(g.from==='desk')setShelfOpen(true);else playBookSound('lift')}
   // Keep the exact point where the book was held under the finger as it shrinks.
   if(g.moved){const target=(g.from==='desk'?shelfRef.current:deskRef.current)?.getBoundingClientRect();setDropReady(!!target&&e.clientX>=target.left&&e.clientX<=target.right&&e.clientY>=target.top&&e.clientY<=target.bottom);const scale=.85;setDrag({from:g.from,left:e.clientX-(g.x-g.left)*scale,top:e.clientY-(g.y-g.top)*scale,width:g.width*scale,height:g.height*scale,settling:false})}
  
@@ -58,14 +59,14 @@ export function Desk({stories, open, openStory, write}:{stories:DeskStory[];open
   }
   setDrag({from:g.from,...destination,settling:true});
   const delay=window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:280;
-  settleTimer.current=window.setTimeout(()=>{if(accepted)setOnDesk(g.from==='shelf');setDrag(null);settleTimer.current=null},delay);
+  settleTimer.current=window.setTimeout(()=>{if(accepted){setOnDesk(g.from==='shelf');if(g.from==='shelf')playBookSound('land')}setDrag(null);settleTimer.current=null},delay);
  };
  const matches=stories.map((story,index)=>({story,index})).filter(({story})=>`${story.title} ${story.author} ${story.category}`.includes(query.trim()));
  const openCover=()=>{if(opening)return; if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){open(1);return}setOpening(true);window.setTimeout(()=>open(1),420)};
  return <main className={'immersive-desk '+(opening?'is-opening':'')}>
   <button className="shelf-toggle" aria-expanded={shelfOpen} aria-controls="editions-shelf" onClick={()=>setShelfOpen(!shelfOpen)}><LibraryBig size={18}/> رف الإصدارات <ChevronDown size={16} className={shelfOpen?'turned':''}/></button>
   <div id="editions-shelf" ref={shelfRef} className={'editions-shelf '+(shelfOpen?'shelf-open':'')+(dropReady&&drag?.from==='desk'?' drop-ready':'')} inert={!shelfOpen}>
-   <div className="shelf-inner"><div className="shelf-heading"><strong>رف الإصدارات</strong><span>اختر كتاباً وضعه على الطاولة</span></div><div className="shelf-books">{!onDesk?<button className={'shelf-book '+(drag?.from==='shelf'?'book-being-carried':'')} onPointerDown={e=>startDrag(e,'shelf')} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={e=>endDrag(e,true)} onClick={()=>{if(!suppressClick.current)setOnDesk(true)}} aria-label="ضع المجلد الأول على الطاولة"><img src="/user-book-cover.png" alt="" draggable="false"/><span>المجلد الأول</span></button>:<div className="shelf-placeholder">مكان المجلد الأول<br/><small>الكتاب على الطاولة</small></div>}</div><div className="shelf-note">{onDesk?'اسحب الكتاب إلى الرف أو اضغط إعادته':'اسحب الكتاب إلى الطاولة أو اضغط عليه'}</div></div><div className="shelf-ledge"/>
+   <div className="shelf-inner"><div className="shelf-heading"><strong>رف الإصدارات</strong><span>اختر كتاباً وضعه على الطاولة</span></div><div className="shelf-books">{!onDesk?<button className={'shelf-book '+(drag?.from==='shelf'?'book-being-carried':'')} onPointerDown={e=>startDrag(e,'shelf')} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={e=>endDrag(e,true)} onClick={()=>{if(!suppressClick.current){playBookSound('lift');setOnDesk(true);window.setTimeout(()=>playBookSound('land'),200)}}} aria-label="ضع المجلد الأول على الطاولة"><img src="/user-book-cover.png" alt="" draggable="false"/><span>المجلد الأول</span></button>:<div className="shelf-placeholder">مكان المجلد الأول<br/><small>الكتاب على الطاولة</small></div>}</div><div className="shelf-note">{onDesk?'اسحب الكتاب إلى الرف أو اضغط إعادته':'اسحب الكتاب إلى الطاولة أو اضغط عليه'}</div></div><div className="shelf-ledge"/>
   </div>
   {drag&&<div className={'dragged-book '+(drag.settling?'is-settling':'')} style={{left:drag.left,top:drag.top,width:drag.width,height:drag.height}} aria-hidden="true"><img src="/user-book-cover.png" alt="" draggable="false"/></div>}
   <div className="desk-identity"><span>✦</span><div><strong>مكتبة المبدعين الصغار</strong><small>حكايات صغيرة، أحلام كبيرة</small></div></div>
