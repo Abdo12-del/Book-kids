@@ -136,4 +136,23 @@ function App(){
  {notice&&<div className="toast">{notice}</div>}</div>
 }
 
-createRoot(document.getElementById('root')!).render(<App/>);
+// Load the two assets needed for the first desk before revealing it. A timeout
+// keeps the library usable even on slow connections or when an image fails.
+function LibraryEntrance(){
+ const [ready,setReady]=useState(false);
+ useEffect(()=>{
+  let active=true;let assetsDone=false;let minimumDone=false;
+  const show=()=>{if(active&&assetsDone&&minimumDone)setReady(true)};
+  const minimum=window.setTimeout(()=>{minimumDone=true;show()},window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:700);
+  const maximum=window.setTimeout(()=>{if(active)setReady(true)},4000);
+  const images=['/library-desk.png','/user-book-cover.png'].map(src=>new Promise<void>(resolve=>{
+   const image=new Image();image.onload=()=>resolve();image.onerror=()=>resolve();image.src=src;
+  }));
+  void Promise.all(images).then(()=>{assetsDone=true;show()});
+  return()=>{active=false;window.clearTimeout(minimum);window.clearTimeout(maximum)};
+ },[]);
+ if(ready)return <App/>;
+ return <main className="library-entrance" dir="rtl" aria-busy="true" aria-label="جارٍ تجهيز المكتبة"><div className="entrance-note"><span className="entrance-tape" aria-hidden="true"/><div className="entrance-book" aria-hidden="true"><span className="entrance-book-left"/><span className="entrance-book-right"/><span className="entrance-book-page"/></div><span className="entrance-spark entrance-spark-one" aria-hidden="true">✦</span><span className="entrance-spark entrance-spark-two" aria-hidden="true">✧</span><p className="entrance-kicker">مكتبة المبدعين الصغار</p><h1>حكاياتنا تستيقظ...</h1><p className="entrance-caption" role="status">نرتّب الكتب على الطاولة، لحظة صغيرة!</p><div className="entrance-progress" aria-hidden="true"><span/></div></div></main>
+}
+
+createRoot(document.getElementById('root')!).render(<LibraryEntrance/>);

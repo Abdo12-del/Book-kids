@@ -243,3 +243,20 @@
 .reader{display:flow-root;overflow:clip;min-height:100dvh}
 body:has(.reader){background:#d9b086 url('/library-desk.png') center/cover fixed}
 @media(max-width:650px){body:has(.reader){background-attachment:scroll}}
+
+/* First visit: a little paper note on the same library table. */
+.library-entrance{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:30px 20px;background:#d6ac7d url('/library-desk.png') center/cover fixed;color:#66543d}
+.entrance-note{position:relative;width:min(370px,100%);padding:38px 30px 30px;text-align:center;background:#fffaf0;border:1px solid #e3d3b8;box-shadow:4px 6px 0 #e0c9a7,9px 13px 24px #4c301f4d;transform:rotate(-1deg)}
+.entrance-tape{position:absolute;top:-9px;left:calc(50% - 35px);width:70px;height:20px;background:#e1d0a9c9;transform:rotate(3deg)}
+.entrance-book{position:relative;width:130px;height:90px;margin:8px auto 20px;perspective:500px;filter:drop-shadow(2px 5px 3px #684d3038)}
+.entrance-book-left,.entrance-book-right,.entrance-book-page{position:absolute;bottom:6px;width:64px;height:70px;background:#fff4d7;border:2px solid #b99164}
+.entrance-book-left{left:2px;border-radius:7px 2px 4px 8px;transform:skewY(7deg);box-shadow:-4px 4px 0 #92714f}
+.entrance-book-right{right:2px;border-radius:2px 7px 8px 4px;transform:skewY(-7deg);box-shadow:4px 4px 0 #92714f}
+.entrance-book-page{right:3px;transform-origin:left center;border-radius:2px 7px 8px 4px;animation:entrance-page-turn 1.8s ease-in-out infinite;backface-visibility:hidden;background:repeating-linear-gradient(#fff8e5 0 12px,#e1d2b6 13px 14px)}
+.entrance-spark{position:absolute;color:#c99e59;font-size:23px}.entrance-spark-one{top:48px;right:25%}.entrance-spark-two{top:80px;left:22%;font-size:18px}
+.entrance-kicker{margin:0;color:#9d805d;font-size:13px;font-weight:800}.entrance-note h1{font-family:'Noto Naskh Arabic',Georgia,serif;color:#5a7062;font-size:30px;line-height:1.4;margin:8px 0}.entrance-caption{color:#76664e;font-size:14px;line-height:1.8;margin:0}
+.entrance-progress{height:5px;max-width:190px;margin:22px auto 0;background:#e9ddc8;border-radius:5px;overflow:hidden}.entrance-progress span{display:block;width:40%;height:100%;border-radius:5px;background:#a5b18c;animation:entrance-progress 1.3s ease-in-out infinite alternate}
+@keyframes entrance-page-turn{0%,18%{transform:skewY(-7deg) rotateY(0)}70%,100%{transform:skewY(-7deg) rotateY(-170deg)}}
+@keyframes entrance-progress{from{transform:translateX(-120%)}to{transform:translateX(270%)}}
+@media(max-width:650px){.library-entrance{background-attachment:scroll}.entrance-note{padding:30px 20px 26px}.entrance-note h1{font-size:26px}.entrance-caption{font-size:14px}}
+@media(prefers-reduced-motion:reduce){.entrance-note{transform:none}.entrance-book-page,.entrance-progress span{animation:none}.entrance-progress span{width:60%}}
