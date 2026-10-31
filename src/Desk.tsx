@@ -19,7 +19,7 @@ function DeskPaper({className, onOpen, children}:{className:string;onOpen:()=>vo
 const playBookSound=(name:'lift'|'land')=>window.dispatchEvent(new CustomEvent('library-sound',{detail:name}));
 type DeskStory = {title:string;author:string;category:string;emoji:string};
 export function Desk({stories, open, openStory, write}:{stories:DeskStory[];open:(page?:number)=>void;openStory:(index:number)=>void;write:()=>void}){
- const [catalog,setCatalog]=useState(false); const [query,setQuery]=useState(''); const [opening,setOpening]=useState(false);
+ const [catalog,setCatalog]=useState(false); const [query,setQuery]=useState('');
  const [shelfOpen,setShelfOpen]=useState(false); const [onDesk,setOnDesk]=useState(true);
  type CarriedBook={from:'desk'|'shelf';left:number;top:number;width:number;height:number;settling:boolean};
  const [drag,setDrag]=useState<CarriedBook|null>(null); const [dropReady,setDropReady]=useState(false);
@@ -62,8 +62,8 @@ export function Desk({stories, open, openStory, write}:{stories:DeskStory[];open
   settleTimer.current=window.setTimeout(()=>{if(accepted){setOnDesk(g.from==='shelf');if(g.from==='shelf')playBookSound('land')}setDrag(null);settleTimer.current=null},delay);
  };
  const matches=stories.map((story,index)=>({story,index})).filter(({story})=>`${story.title} ${story.author} ${story.category}`.includes(query.trim()));
- const openCover=()=>{if(opening)return; if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){open(1);return}setOpening(true);window.setTimeout(()=>open(1),420)};
- return <main className={'immersive-desk '+(opening?'is-opening':'')}>
+ const openCover=()=>open(1);
+ return <main className="immersive-desk">
   <button className="shelf-toggle" aria-expanded={shelfOpen} aria-controls="editions-shelf" onClick={()=>setShelfOpen(!shelfOpen)}><LibraryBig size={18}/> رف الإصدارات <ChevronDown size={16} className={shelfOpen?'turned':''}/></button>
   <div id="editions-shelf" ref={shelfRef} className={'editions-shelf '+(shelfOpen?'shelf-open':'')+(dropReady&&drag?.from==='desk'?' drop-ready':'')} inert={!shelfOpen}>
    <div className="shelf-inner"><div className="shelf-heading"><strong>رف الإصدارات</strong><span>اختر كتاباً وضعه على الطاولة</span></div><div className="shelf-books">{!onDesk?<button className={'shelf-book '+(drag?.from==='shelf'?'book-being-carried':'')} onPointerDown={e=>startDrag(e,'shelf')} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={e=>endDrag(e,true)} onClick={()=>{if(!suppressClick.current){playBookSound('lift');setOnDesk(true);window.setTimeout(()=>playBookSound('land'),200)}}} aria-label="ضع المجلد الأول على الطاولة"><img src="/user-book-cover.png" alt="" draggable="false"/><span>المجلد الأول</span></button>:<div className="shelf-placeholder">مكان المجلد الأول<br/><small>الكتاب على الطاولة</small></div>}</div><div className="shelf-note">{onDesk?'اسحب الكتاب إلى الرف أو اضغط إعادته':'اسحب الكتاب إلى الطاولة أو اضغط عليه'}</div></div><div className="shelf-ledge"/>
