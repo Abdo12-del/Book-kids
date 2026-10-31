@@ -13,6 +13,26 @@ const seedStories:Story[] = [
  {title:'حديقة الأحلام',author:'ريم عبدالله',category:'قيم وأخلاق',color:'green',emoji:'🌷',text:'زرعت ريم بذرة صغيرة في حديقة منزلها، وكانت تسقيها كل يوم وتحدثها عن أحلامها.\n\nمرت الأيام ولم تظهر الزهرة، لكنها لم تفقد الأمل. وفي صباح مشمس، وجدت برعماً أخضر يطل من التراب.\n\nتعلمت ريم أن الأحلام، مثل البذور، تحتاج إلى الصبر والعناية حتى تكبر.'},
  {title:'صديقي الأرنب الشجاع',author:'عمر محمد',category:'عالم الحيوانات',color:'peach',emoji:'🐇',text:'كان الأرنب الصغير يخاف من عبور الجسر الخشبي. في يوم من الأيام، سمع صديقه يناديه من الناحية الأخرى.\n\nأخذ نفساً عميقاً، وخطا خطوة صغيرة، ثم أخرى. وحين وصل، اكتشف أن الشجاعة لا تعني ألا نخاف، بل أن نحاول رغم خوفنا.'}
 ];
+function PaperSound(){
+ const [enabled,setEnabled]=useState(false);
+ const audio=useRef<AudioContext|null>(null);
+ useEffect(()=>()=>{void audio.current?.close()},[]);
+ useEffect(()=>{
+  if(!enabled)return;
+  const rustle=(event:MouseEvent)=>{
+   const target=event.target as Element | null;
+   if(!target?.closest('.desk-book, .shelf-book, .desk-paper, .side-arrow, .reader-bottom button, .editor-actions .primary'))return;
+   const ctx=audio.current;if(!ctx||ctx.state!=='running')return;
+   const buffer=ctx.createBuffer(1,Math.floor(ctx.sampleRate*.12),ctx.sampleRate);const data=buffer.getChannelData(0);
+   for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*Math.pow(1-i/data.length,3);
+   const source=ctx.createBufferSource();const filter=ctx.createBiquadFilter();const gain=ctx.createGain();
+   source.buffer=buffer;filter.type='lowpass';filter.frequency.value=1400;gain.gain.value=.045;source.connect(filter).connect(gain).connect(ctx.destination);source.start();
+  };
+  document.addEventListener('click',rustle);return()=>document.removeEventListener('click',rustle);
+ },[enabled]);
+ const toggle=()=>{if(enabled){setEnabled(false);void audio.current?.suspend();return}try{const ctx=audio.current ?? new AudioContext();audio.current=ctx;void ctx.resume();setEnabled(true)}catch{setEnabled(false)}};
+ return <button className="paper-sound-toggle" onClick={toggle} aria-pressed={enabled} title="أصوات الورق اختيارية">{enabled?'♫ الصوت مفعّل':'♪ تفعيل أصوات الورق'}</button>
+}
 function App(){
  const flipBook = useRef<any>(null);
  const cameraRef = useRef<HTMLDivElement>(null);
@@ -88,6 +108,7 @@ function App(){
  useEffect(()=>{if(!notice)return;const t=setTimeout(()=>setNotice(''),3500);return()=>clearTimeout(t)},[notice]);
  const found=stories.filter(s=>`${s.title} ${s.author} ${s.category}`.includes(search));
  return <div className="app" dir="rtl">
+ <PaperSound/>
 
  {view==='home'&&<Desk stories={stories} open={openBook} openStory={(index)=>openBook(storyStarts[index])} write={()=>setView('login')}/>}
  {view==='reader'&&<main className="reader"><div className="reader-table-controls"><button className="reader-close-book" onClick={()=>setView('home')}><ArrowRight size={18}/> إغلاق الكتاب</button><div className="reader-tools"><button onClick={()=>setToc(!toc)} title="الفهرس" aria-label="فهرس الكتاب"><List size={19}/><span>الفهرس</span></button><button onClick={()=>setZoom(!zoom)} aria-label={zoom?"تصغير النص":"تكبير النص"} aria-pressed={zoom} title="تكبير"><ZoomIn size={19}/><span>تكبير</span></button><button onClick={()=>{if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.()}} title="ملء الشاشة" aria-label="ملء الشاشة"><Maximize2 size={18}/></button></div></div>{toc&&<div className="toc"><button onClick={()=>setToc(false)} aria-label="إغلاق"><X size={18}/></button><strong>فهرس الكتاب</strong>{pages.map((p,i)=>(p.label==='تابع الحكاية'||p.label==='تابع الفهرس')?null:<button key={i} onClick={()=>{flipBook.current?.turnToPage(i);setToc(false)}}>{p.title}<span>{i+1}</span></button>)}</div>}<div className={'book-stage '+(zoom?'zoom':'')}><button className="side-arrow" disabled={page===0} onClick={()=>goPage(page-1)} aria-label="الصفحة السابقة"><ChevronRight/></button><div className="reader-camera" ref={cameraRef}><HTMLFlipBook ref={flipBook} className="real-flip-book" initialPage={initialPage} sizing="responsive" width={380} height={540} minWidth={220} maxWidth={380} minHeight={315} maxHeight={540} drawShadow={true} flippingTime={1200} usePortrait={true} startZIndex={0} autoSize={true} maxShadowOpacity={0.5} hardCovers={true} allowTouchScroll={false} respectInteractiveContent={true} swipeDistance={25} foldCornerOnHover={true} flipOnClick="corners" pageBackground="#fffdf4" readingDirection="rtl" respectReducedMotion={true} controls="none" aria-label="المجلد الأول: بداية الحكاية" roleDescription="كتاب" liveRegionText={(_page,count,info)=>`صفحة ${info.pages.map(n=>n+1).join(' و ')} من ${count}`} onTurnProgress={({progress,direction})=>moveCamera(progress,direction)} onChangeState={({state})=>{if(state==='read')resetCamera()}} onLoaded={syncBook} onPageChange={syncBook} onChangeOrientation={(info)=>setPortrait(info.orientation==='portrait')}>{bookLeaves}</HTMLFlipBook></div><button className="side-arrow" disabled={visiblePages.includes(pages.length-1)} onClick={()=>goPage(page+1)} aria-label="الصفحة التالية"><ChevronLeft/></button></div><div className="reader-bottom"><button onClick={()=>goPage(page-1)} disabled={page===0}><ChevronRight size={17}/> السابقة</button><span>صفحة {visiblePages.map(n=>n+1).join(' – ')} من {pages.length}</span><button onClick={()=>goPage(page+1)} disabled={visiblePages.includes(pages.length-1)}>التالية <ChevronLeft size={17}/></button></div><p className="reader-tip">اسحب زاوية الصفحة أو استخدم الأسهم للتنقل &nbsp; ✦</p>{(()=>{const story=demoStories.find(s=>s.status==='published'&&visiblePages.some(i=>s.title===pages[i]?.title));if(!story)return null;return <div className="reader-comments"><h2>💬 كلمات من القرّاء</h2><p>اترك كلمة لطيفة للمبدع الصغير. تظهر التعليقات بعد مراجعتها.</p>{story.comments.filter(c=>c.approved).map(c=><div className="public-comment" key={c.id}><strong>{c.name}</strong><p>{c.text}</p></div>)}<div className="comment-form"><input placeholder="اسم مستعار" value={commentName} onChange={e=>setCommentName(e.target.value)} maxLength={60}/><textarea placeholder="اكتب تعليقاً لطيفاً..." value={commentText} onChange={e=>setCommentText(e.target.value)} maxLength={1000}/><button className="primary" onClick={()=>{if(!commentName.trim()||!commentText.trim()){setNotice('أضف اسماً مستعاراً وتعليقاً أولاً.');return}setDemoStories(demoStories.map(s=>s.id===story.id?{...s,comments:[...s.comments,{id:crypto.randomUUID(),name:commentName.trim(),text:commentText.trim(),approved:false}]}:s));setCommentName('');setCommentText('');setNotice('وصل تعليقك وهو بانتظار المراجعة.')}}>إرسال التعليق</button></div></div>})()}</main>}

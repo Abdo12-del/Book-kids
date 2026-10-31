@@ -194,3 +194,15 @@
 .desk-workspace button:focus-visible,.demo-login button:focus-visible,.reader button:focus-visible{outline:3px solid #436d73;outline-offset:3px}
 @media(max-width:650px){.desk-workspace{padding:12px 12px 45px}.desk-workspace .dash-side{gap:8px}.desk-workspace .dash-brand{padding:7px 9px;margin-bottom:7px}.desk-workspace .dash-brand strong{font-size:10px}.desk-workspace .side-bottom{margin-bottom:7px}.desk-workspace .dash-nav{order:3;flex-basis:100%;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;padding:4px 3px 0;scrollbar-width:thin}.desk-workspace .dash-nav button{flex:none;min-height:44px;font-size:10px;padding:9px 10px}.desk-workspace .desk-folder{padding:24px 14px 34px;min-height:65vh;box-shadow:3px 5px 0 #ceb58f,5px 10px 16px #56382455}.desk-workspace .dash-header h1{font-size:22px}.desk-workspace .local-banner{font-size:10px;line-height:1.8}.desk-workspace .welcome-panel{padding:20px 16px}.desk-workspace .welcome-panel h2{font-size:19px}.desk-workspace .stats-grid{gap:10px}.desk-workspace .stat{min-height:105px;padding:12px}.desk-workspace .story-row{padding:12px 11px;gap:8px}.desk-workspace .story-letter-editor{padding:19px 16px!important}.desk-workspace .comment-item{padding:15px 12px}.reader .reader-comments{margin:20px 15px}}
 @media(prefers-reduced-motion:reduce){.desk-workspace .story-row{transition:none}}
+
+/* Desk objects respond to touch; the separate buttons remain usable without dragging. */
+.desk-paper{touch-action:none;user-select:none;cursor:grab;transition:filter .18s,box-shadow .18s,transform .18s}
+.desk-paper:active{cursor:grabbing;filter:drop-shadow(0 8px 5px #38201266)}
+.desk-paper:focus-visible,.desk-book:focus-visible,.shelf-book:focus-visible{outline:3px solid #fff1a5;outline-offset:4px}
+.immersive-center .desk-book:active,.shelf-book:active{filter:drop-shadow(8px 14px 8px #26160f99)}
+.dragged-book img{box-shadow:3px 3px 0 #ece0c8,5px 5px 0 #d3c2a3,8px 8px 0 #a88a68,11px 13px 14px #38201266}
+/* A single flap is both the open and closed surface: no duplicate remains above the pocket. */
+.letter-seal-flap{backface-visibility:visible}
+@media(prefers-reduced-motion:reduce){.desk-paper,.immersive-center .desk-book,.shelf-book{transition:none}}
+.paper-sound-toggle{position:fixed;z-index:60;bottom:8px;left:8px;border:1px solid #b69b77;border-radius:3px;background:#fff5dc;color:#674b30;padding:7px 10px;font-size:11px;box-shadow:2px 3px 6px #4d311d55}
+.paper-sound-toggle:focus-visible{outline:3px solid #f8c95b;outline-offset:2px}
