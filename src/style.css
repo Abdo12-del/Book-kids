@@ -351,3 +351,16 @@ body:has(.reader){background:#d9b086 url('/library-desk.png') center/cover fixed
 .creator-shelf-inner{padding-top:calc(var(--creator-nav-bottom, 70px) + 12px);padding-left:38px}
 .creator-shelf-close{top:calc(var(--creator-nav-bottom, 70px) + 10px);left:5px}
 @media(max-width:650px){.creator-shelf-inner{padding-top:calc(var(--creator-nav-bottom, 110px) + 10px);padding-left:32px}.creator-shelf-close{top:calc(var(--creator-nav-bottom, 110px) + 7px);left:3px}}
+
+/* A4 portrait proportions: 210 × 297 mm, scaled to the available screen. */
+.creator-writing{width:min(600px,100%)}
+.creator-writing > .creator-paper{box-sizing:border-box;width:100%;aspect-ratio:210 / 297;display:flex;flex-direction:column;min-height:0}
+.creator-writing > .creator-paper h1{flex:none;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.creator-writing > .creator-paper label,.creator-writing > .creator-paper .creator-paper-foot{flex:none}
+.creator-writing > .creator-paper textarea{box-sizing:border-box;flex:1 1 auto;min-height:0;height:auto;resize:none;overflow-y:auto}
+@media(max-width:650px){.creator-writing > .creator-paper textarea{font-size:16px}}
+
+/* Soft, matte cream paper with dark ink; the cover images remain unchanged. */
+.real-flip-book .flip-page{background-color:#fbf4e5;background-image:linear-gradient(90deg,#e9dcc5 0%,#f8eedb 6%,#fbf4e5 14%,#fbf4e5 88%,#f2e6d2 100%)}
+.real-flip-book .book-paper,.real-flip-book .book-prose{color:#392f27}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
