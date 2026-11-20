@@ -20,7 +20,7 @@ const playBookSound=(name:'lift'|'land')=>window.dispatchEvent(new CustomEvent('
 export type BookId='first'|'moon';
 type DeskStory = {title:string;author:string;category:string;emoji:string};
 export function Desk({stories, open, openMoon, openStory, write,selectedBook,setSelectedBook}:{stories:DeskStory[];open:(page?:number)=>void;openMoon:()=>void;openStory:(index:number)=>void;write:()=>void;selectedBook:BookId;setSelectedBook:(book:BookId)=>void}){
- const cover=(book:BookId)=>book==='first'?'/user-book-cover.png':'/moon-train-cover.jpg';
+ const cover=(book:BookId)=>book==='first'?'/user-book-cover.png':'/moon-train-special-cover.jpg';
  const bookTitle=(book:BookId)=>book==='first'?'المجلد الأول':'قطار الأشياء المنسية';
  const [catalog,setCatalog]=useState(false); const [query,setQuery]=useState('');
  const [shelfOpen,setShelfOpen]=useState(false); const [onDesk,setOnDesk]=useState(true);

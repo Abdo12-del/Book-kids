@@ -374,3 +374,17 @@ body:has(.reader){background:#d9b086 url('/library-desk.png') center/cover fixed
 .moon-page>img{object-fit:contain;background:#f5eddd}
 .moon-desk-cover img,.moon-dragged img{object-fit:cover}
 .moon-desk-title{position:absolute;top:8%;left:7%;right:7%;padding:8px 5px;background:#173647e8;color:#fff4cf;border:1px solid #dbc598;text-align:center;font:700 clamp(16px,2.2vw,27px)/1.4 'Noto Naskh Arabic',serif}
+
+/* Each scene is an illustrated page followed by its own facing text page. */
+.moon-illustration{position:relative;isolation:isolate;width:100%;height:100%;overflow:hidden;background-position:center;background-size:cover;background-color:#102e38}
+.moon-illustration:before{content:'';position:absolute;z-index:-1;inset:-16px;background-image:inherit;background-position:center;background-size:cover;filter:blur(14px) brightness(.76)}
+.moon-illustration img{display:block;width:100%;height:100%;object-fit:contain;position:relative;filter:drop-shadow(0 0 8px #1625234d)}
+.moon-picture-number{position:absolute;bottom:8px;left:10px;padding:1px 6px;border-radius:10px;background:#fff9e5c9;color:#60503a;font-size:10px}
+.moon-text-page{position:relative;height:100%;display:flex;flex-direction:column;text-align:right;background:#fbf4e5;color:#392f27;font-family:'Noto Naskh Arabic',serif;padding:22px 30px 30px}
+.moon-text-running{display:flex;justify-content:space-between;gap:8px;flex:none;border-bottom:1px solid #dacbb0;padding-bottom:7px;font:10px/1.5 Cairo,sans-serif;color:#987f60}
+.moon-text-content{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;touch-action:pan-y;font:18px/1.85 'Noto Naskh Arabic',serif;padding:8px 2px 12px;scrollbar-width:thin}
+.moon-text-heading{text-align:center;color:#a28058;margin:5px 0 20px}.moon-text-heading span{font:700 12px Cairo,sans-serif}.moon-text-heading div{font-size:17px;margin-top:5px}.moon-text-content p{margin:0 0 12px}.moon-text-content strong{color:#6c4d32}.moon-text-prompt{margin-top:20px;padding:10px 12px;border-top:1px solid #dcc9aa;background:#f4ead6;color:#6f563a;font-size:15px;line-height:1.7}.moon-text-number{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);font-size:11px;color:#9a8468}
+@media(max-width:650px){.moon-text-page{padding:14px 16px 22px}.moon-text-running{font-size:8px;padding-bottom:4px}.moon-text-content{font-size:15px;line-height:1.65;padding:4px 1px 10px}.moon-text-heading{margin:3px 0 8px}.moon-text-heading span{font-size:10px}.moon-text-heading div{font-size:13px;margin:0}.moon-text-content p{margin:0 0 7px}.moon-text-prompt{margin-top:8px;padding:5px 7px;font-size:12px;line-height:1.5}}
+/* A gilded title in the night sky leaves the illustrated friends visible. */
+.moon-cover .moon-cover-title{top:4%;left:8%;right:8%;padding:10px 8px 12px;background:linear-gradient(180deg,#121b36d9,#1d254bc4);border:1px solid #edcf87;border-radius:48% 48% 12px 12px/20% 20% 12px 12px;box-shadow:inset 0 0 0 3px #d5ae6440,0 4px 16px #0c142a80;text-shadow:0 2px 4px #0b1327}
+.moon-cover .moon-cover-title strong{color:#fff1bd;text-shadow:0 2px 0 #866027,0 3px 9px #101326}
