@@ -104,7 +104,7 @@ function App(){
    const paragraphs=story.text.split(/\n+/); const chunks:string[]=[]; let current='';
    for(const paragraph of paragraphs){
     for(const word of paragraph.trim().split(/\s+/).filter(Boolean)){
-     if(current && current.length+word.length+1>190){chunks.push(current);current='';}
+     if(current && current.length+word.length+1>360){chunks.push(current);current='';}
      current+=(current&&!current.endsWith('\n')?' ':'')+word;
     }
     if(current) current+='\n\n';
