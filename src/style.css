@@ -390,3 +390,6 @@ body:has(.reader){background:#d9b086 url('/library-desk.png') center/cover fixed
 .moon-cover .moon-cover-title strong{color:#fff1bd;text-shadow:0 2px 0 #866027,0 3px 9px #101326}
 
 @media(max-width:650px){.story-illustration{height:64px;margin-bottom:5px;border-radius:9px}}
+
+.visitor-counter{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(16px,env(safe-area-inset-bottom));z-index:80;width:82px;height:82px;border:2px solid #d9bd82;border-radius:50%;background:radial-gradient(circle at 35% 25%,#fffdf4,#f1e4c8 72%,#dfc89a);box-shadow:0 4px 14px #34241955,inset 0 0 0 4px #fff8e6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;color:#5e4932;text-align:center;pointer-events:none}.visitor-counter>span{font-size:17px;line-height:1.05}.visitor-counter strong{font-size:19px;line-height:1.2;font-variant-numeric:tabular-nums}.visitor-counter small{font:700 9px/1.2 'Cairo',sans-serif;color:#806747}
+@media(max-width:650px){.visitor-counter{width:70px;height:70px;left:max(10px,env(safe-area-inset-left));bottom:max(10px,env(safe-area-inset-bottom))}.visitor-counter strong{font-size:17px}}
