@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type PointerEvent, type ReactNode } from 'react';
-import { ArrowLeft, BookOpen, ChevronDown, Feather, LibraryBig, Search, X } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronDown, LibraryBig, Search, X } from 'lucide-react';
 
 // A paper can be moved without confusing a drag with the action of opening it.
 function DeskPaper({className, onOpen, children}:{className:string;onOpen:()=>void;children:ReactNode}){
@@ -19,7 +19,7 @@ function DeskPaper({className, onOpen, children}:{className:string;onOpen:()=>vo
 const playBookSound=(name:'lift'|'land')=>window.dispatchEvent(new CustomEvent('library-sound',{detail:name}));
 export type BookId='first';
 type DeskStory = {title:string;author:string;category:string;emoji:string};
-export function Desk({stories, open, openStory, write,selectedBook,setSelectedBook}:{stories:DeskStory[];open:(page?:number)=>void;openStory:(index:number)=>void;write:()=>void;selectedBook:BookId;setSelectedBook:(book:BookId)=>void}){
+export function Desk({stories, open, openStory,selectedBook,setSelectedBook}:{stories:DeskStory[];open:(page?:number)=>void;openStory:(index:number)=>void;selectedBook:BookId;setSelectedBook:(book:BookId)=>void}){
  const cover=(_book:BookId)=>'/user-book-cover.png';
  const bookTitle=(_book:BookId)=>'قصص المبدعين';
  const [catalog,setCatalog]=useState(false); const [query,setQuery]=useState('');
@@ -73,7 +73,7 @@ export function Desk({stories, open, openStory, write,selectedBook,setSelectedBo
   </div>
   {drag&&<div className={'dragged-book '+(drag.settling?'is-settling':'')} style={{left:drag.left,top:drag.top,width:drag.width,height:drag.height}} aria-hidden="true"><img src={cover(drag.book)} alt="" draggable="false"/></div>}
   <div className="desk-identity"><span>✦</span><div><strong>مكتبة المبدعين الصغار</strong><small>حكايات صغيرة، أحلام كبيرة</small></div></div>
-  <div className="desk-paper-links"><DeskPaper className="catalog-paper" onOpen={()=>setCatalog(true)}><span className="paper-tape"/><BookOpen size={23}/><strong>فهرس الحكايات</strong><small>اختر حكايتك</small></DeskPaper><DeskPaper className="creator-paper" onOpen={write}><span className="paper-tape"/><Feather size={23}/><strong>اكتب حكايتك</strong><small>مساحة المبدع</small></DeskPaper></div>
+  <div className="desk-paper-links"><DeskPaper className="catalog-paper" onOpen={()=>setCatalog(true)}><span className="paper-tape"/><BookOpen size={23}/><strong>فهرس الحكايات</strong><small>اختر حكايتك</small></DeskPaper></div>
   <section ref={deskRef} className={'immersive-center '+(dropReady&&drag?.from==='shelf'?'drop-ready':'')} aria-label="الكتاب على طاولة القراءة">{onDesk?<><div className={'desk-book-wrap '+(drag?.from==='desk'?'book-being-carried':'')}><div className="book-ribbon" aria-hidden="true"/><button className="desk-book" onPointerDown={e=>startDrag(e,'desk',selectedBook)} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={e=>endDrag(e,true)} onClick={()=>{if(!suppressClick.current)openCover()}} aria-label={'افتح كتاب '+bookTitle(selectedBook)}><div className={"desk-book-cover user-book-cover "}><img src={cover(selectedBook)} alt={"غلاف "+bookTitle(selectedBook)} draggable="false"/></div></button></div><button className="table-open-hint" onClick={openCover}><span>☝</span> اضغط على الكتاب لفتحه</button><button className="return-book" onClick={()=>{setShelfOpen(true);setOnDesk(false)}}>أعِد الكتاب إلى الرف</button></>:<div className="empty-desk"><BookOpen size={35}/><strong>مكان كتابك هنا</strong><span>اختر كتاباً من رف الإصدارات</span><button onClick={()=>setShelfOpen(true)}>افتح الرف</button></div>}</section>
   <div className="table-demo">نسخة تجريبية · بيانات هذا الجهاز فقط</div>
   {catalog&&<div className="drawer-backdrop" onClick={()=>setCatalog(false)}><section className="desk-drawer" onClick={e=>e.stopPropagation()} role="dialog" aria-modal="true" aria-label="فهرس الحكايات"><div className="drawer-head"><div><span>✦ &nbsp; قصص المبدعين</span><h2>فهرس الحكايات</h2><p>أي حكاية سنقرأ اليوم؟</p></div><button onClick={()=>setCatalog(false)} aria-label="إغلاق"><X size={20}/></button></div><label className="drawer-search"><Search size={18}/><input autoFocus value={query} onChange={e=>setQuery(e.target.value)} placeholder="ابحث عن حكاية أو كاتب..."/></label><div className="drawer-list">{matches.map(({story,index})=><button key={index} onClick={()=>{setCatalog(false);openStory(index)}}><span className="drawer-emoji">{story.emoji}</span><span><strong>{story.title}</strong><small>{story.author} · {story.category}</small></span><ArrowLeft size={17}/></button>)}{!matches.length&&<p className="drawer-empty">لم نجد حكاية بهذا الاسم، جرّب البحث مرة أخرى.</p>}</div></section></div>}
