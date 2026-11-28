@@ -9,7 +9,7 @@ import {CreatorDesk} from './CreatorDesk';
 
 type Story = {title:string; author:string; category:string; text:string; color:string; emoji:string};
 const seedStories:Story[] = [{
- title:'حكاية فلسطين', author:'سارة', category:'حكاية وطن', color:'green', emoji:'🕊️',
+ title:'حكاية فلسطين', author:'Sara Hajhamad', category:'حكاية وطن', color:'green', emoji:'🕊️',
  text:`في عام 1917، صدر وعد بلفور الذي أعلن دعم بريطانيا لإقامة وطن قومي لليهود في فلسطين، ثم خضعت فلسطين للانتداب البريطاني.
 
 وفي عام 1947، أصدرت الأمم المتحدة قرارًا بتقسيم فلسطين إلى دولتين، وفي عام 1948 أُعلن قيام إسرائيل، وتعرّض مئات الآلاف من الفلسطينيين للتهجير من مدنهم وقراهم، فيما يُعرف بالنكبة.
